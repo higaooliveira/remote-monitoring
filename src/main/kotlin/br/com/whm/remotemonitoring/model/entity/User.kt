@@ -1,14 +1,20 @@
 package br.com.whm.remotemonitoring.model.entity
 
+import br.com.whm.remotemonitoring.util.PasswordEncoder
+import com.fasterxml.jackson.annotation.JsonIgnore
+import org.springframework.validation.annotation.Validated
 import javax.persistence.*
 
+@Validated
 @Entity(name = "users")
 data class User (
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        val id: Long,
+        val id: Long? = null,
         val email: String,
-        val password: String,
+
+        @JsonIgnore
+        var password: String,
         val name: String,
         val phone: String
 
@@ -29,5 +35,9 @@ data class User (
         var result = id.hashCode()
         result = 31 * result + email.hashCode()
         return result
+    }
+
+    fun encryptPassword() {
+        this.password = PasswordEncoder.encrypt(this.password)
     }
 }
