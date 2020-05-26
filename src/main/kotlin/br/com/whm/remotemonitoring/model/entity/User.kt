@@ -6,19 +6,25 @@ import org.springframework.validation.annotation.Validated
 import javax.persistence.*
 
 @Validated
-@Entity(name = "users")
+@Entity
+@Table(name = "users")
 data class User (
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        val id: Long? = null,
+        val id: Long?,
         val email: String,
 
         @JsonIgnore
         var password: String,
-        val name: String,
-        val phone: String
-
+        var name: String,
+        var phone: String
 ) {
+    @OneToOne(mappedBy = "user", cascade = [CascadeType.ALL])
+    lateinit var settings: UserSettings
+
+    @OneToOne(mappedBy = "user", cascade = [CascadeType.ALL])
+    lateinit var device: Device
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
