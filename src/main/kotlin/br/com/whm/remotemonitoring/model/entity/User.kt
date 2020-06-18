@@ -17,13 +17,17 @@ data class User (
         @JsonIgnore
         var password: String,
         var name: String,
-        var phone: String
-) {
-    @OneToOne(mappedBy = "user", cascade = [CascadeType.ALL])
-    lateinit var settings: UserSettings
+        var phone: String,
+        @OneToOne(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+        var settings: UserSettings? = null,
 
-    @OneToOne(mappedBy = "user", cascade = [CascadeType.ALL])
-    lateinit var device: Device
+        @OneToOne(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+        var device: Device? = null,
+
+        @OneToMany(mappedBy = "id.monitor")
+        val monitors: Set<UserHasMonitor> = HashSet()
+
+) {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

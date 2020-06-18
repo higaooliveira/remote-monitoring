@@ -29,42 +29,13 @@ data class UserRegisterDTO (
         @get:NotNull(message = "User must be contain settings")
         @NotBlank(message = "User must be contain settings")
         @NotEmpty(message = "User must be contain settings")
-        val heartRateAvg: Double,
-        
-        @get:NotNull(message = "User must be contain settings")
-        @NotBlank(message = "User must be contain settings")
-        @NotEmpty(message = "User must be contain settings")
-        val oximetryAvg: Double,
-
-        @get:NotNull(message = "User must be contain settings")
-        @NotBlank(message = "User must be contain settings")
-        @NotEmpty(message = "User must be contain settings")
-        val temperatureAvg: Double,
-
-        @get:NotNull(message = "User must be contain settings")
-        @NotBlank(message = "User must be contain settings")
-        @NotEmpty(message = "User must be contain settings")
         val hardwareId: String
 ){
-    fun toEntity(): User {
-            val user = User(
-                    id = null,
-                    email = email,
-                    password = password,
-                    name = name,
-                    phone = phone
-            )
-            user.settings = userSettingsFactory(user)
+        fun toEntity(): User {
+            val user = User(id = null, email = email, password = password,  name = name, phone = phone)
             user.device = deviceFactory(user)
             return user
-    }
-        private fun userSettingsFactory(user: User): UserSettings = UserSettings(
-                id = null,
-                heartRateAverage = heartRateAvg,
-                oximetryAverage = oximetryAvg,
-                temperatureAverage = temperatureAvg,
-                user = user
-        )
+        }
 
         private fun deviceFactory(user: User): Device = Device(null, hardwareId, user)
 }

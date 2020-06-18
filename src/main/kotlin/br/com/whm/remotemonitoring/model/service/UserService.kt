@@ -1,5 +1,6 @@
 package br.com.whm.remotemonitoring.model.service
 
+import br.com.whm.remotemonitoring.model.DTO.SettingsDTO
 import br.com.whm.remotemonitoring.model.DTO.UserRegisterDTO
 import br.com.whm.remotemonitoring.model.entity.User
 import br.com.whm.remotemonitoring.model.repository.UserRepository
@@ -12,7 +13,7 @@ import java.util.*
 
 @Component
 @Service
-class UserService(@Autowired val userRepository: UserRepository){
+class UserService(@Autowired val userRepository: UserRepository) {
 
     fun findById(id: Long): User {
         val user: Optional<User> = this.userRepository.findById(id)
@@ -28,6 +29,20 @@ class UserService(@Autowired val userRepository: UserRepository){
         val newUser = user.toEntity()
         newUser.encryptPassword()
         return this.userRepository.save(newUser)
+    }
+
+    fun createSettings(id: Long, settings: SettingsDTO): User {
+        val user = this.findById(id)
+        if (user.settings != null){
+            throw ResourceAlreadyExists("User Settings")
+        }
+
+        val userSettings = settings.toEntity(user)
+        user.settings = userSettings
+
+        this.userRepository.save(user)
+
+        return user
     }
 
     private fun emailExists(email: String): Boolean = userRepository.findByEmail(email) != null
